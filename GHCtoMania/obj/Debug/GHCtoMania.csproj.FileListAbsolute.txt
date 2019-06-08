@@ -34,10 +34,8 @@ D:\Proyectos\GHCtoMania\GHCtoMania\bin\Debug\GHCtoMania.pdb
 D:\Proyectos\GHCtoMania\GHCtoMania\bin\Debug\SharpDX.DirectInput.dll
 D:\Proyectos\GHCtoMania\GHCtoMania\bin\Debug\SharpDX.dll
 D:\Proyectos\GHCtoMania\GHCtoMania\bin\Debug\WindowsInput.dll
-D:\Proyectos\GHCtoMania\GHCtoMania\bin\Debug\Z.Expressions.Eval.dll
 D:\Proyectos\GHCtoMania\GHCtoMania\bin\Debug\SharpDX.pdb
 D:\Proyectos\GHCtoMania\GHCtoMania\bin\Debug\SharpDX.DirectInput.pdb
 D:\Proyectos\GHCtoMania\GHCtoMania\bin\Debug\SharpDX.DirectInput.xml
 D:\Proyectos\GHCtoMania\GHCtoMania\bin\Debug\WindowsInput.xml
-D:\Proyectos\GHCtoMania\GHCtoMania\bin\Debug\Z.Expressions.Eval.xml
 D:\Proyectos\GHCtoMania\GHCtoMania\obj\Debug\GHCtoMania.csproj.CopyComplete

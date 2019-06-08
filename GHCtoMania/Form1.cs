@@ -1,19 +1,20 @@
 ﻿using SharpDX.DirectInput;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 using WindowsInput;
 using WindowsInput.Native;
-using Z.Expressions;
 
 namespace GHCtoMania
 {
 	public partial class Form1 : Form
 	{
-		DirectInput directInput = new DirectInput();
+		readonly DirectInput directInput = new DirectInput();
 		Guid GuitarGuid = Guid.Empty;
 		Joystick Guitar;
-		InputSimulator InputSimulator = new InputSimulator();
+		readonly InputSimulator InputSimulator = new InputSimulator();
 
 		#region Guitar Status
 		bool pressing_green = false;
@@ -26,35 +27,42 @@ namespace GHCtoMania
 		bool pressing_strum_yellow = false;
 		bool pressing_strum_blue = false;
 		bool pressing_strum_orange = false;
+		object GreenState = null;
+		object RedState = null;
+		object YellowState = null;
+		object BlueState = null;
+		object OrangeState = null;
+		object StrumDownState = null;
+		object StrumUpState = null;
 		#endregion
 
 		#region GuitarCFG
 		string HID;
 		string GuitarName;
 		string Green;
-		string _GreenValue;
 		string Red;
-		string _RedValue;
 		string Yellow;
-		string _YellowValue;
 		string Blue;
-		string _BlueValue;
 		string Orange;
-		string _OrangeValue;
 		string StrumDown;
-		string _StrumDownValue;
 		string StrumUp;
-		string _StrumUpValue;
 		#endregion
 
 		#region Guitar Values
 		object GreenValue;
+		object GreenDefault;
 		object RedValue;
+		object RedDefault;
 		object YellowValue;
+		object YellowDefault;
 		object BlueValue;
+		object BlueDefault;
 		object OrangeValue;
+		object OrangeDefault;
 		object StrumDownValue;
+		object StrumDownDefault;
 		object StrumUpValue;
+		object StrumUpDefault;
 		#endregion
 
 		#region Guitar Keys
@@ -87,6 +95,7 @@ namespace GHCtoMania
 			{
 				Guitar = new Joystick(directInput, GuitarGuid);
 				GuitarGuid = Guid.Empty;
+				Guitar.Properties.BufferSize = 128;
 				Guitar.Acquire();
 				for (var line = 0; line < guitarslines.Length; line++)
 				{
@@ -104,38 +113,40 @@ namespace GHCtoMania
 						if (guitarVID == vid && guitarPID == pid)
 						{
 							HID = guitarslines[line].Replace("HID ", "");
-							GuitarName = guitarslines[line + 1];
-							Green = guitarslines[line + 2];
-							_GreenValue = guitarslines[line + 3];
-							Red = guitarslines[line + 4];
-							_RedValue = guitarslines[line + 5];
-							Yellow = guitarslines[line + 6];
-							_YellowValue = guitarslines[line + 7];
-							Blue = guitarslines[line + 8];
-							_BlueValue = guitarslines[line + 9];
-							Orange = guitarslines[line + 10];
-							_OrangeValue = guitarslines[line + 11];
-							StrumDown = guitarslines[line + 12];
-							_StrumDownValue = guitarslines[line + 13];
-							StrumUp = guitarslines[line + 14];
-							_StrumUpValue = guitarslines[line + 15];
-							toolStripStatusLabel1.Text = Guitar.Information.ProductName;
+							GuitarName = guitarslines[line++];
+							Green = guitarslines[line++];
+							GreenValue = guitarslines[line++];
+							GreenDefault = guitarslines[line++];
+							Red = guitarslines[line++];
+							RedValue = guitarslines[line++];
+							RedDefault = guitarslines[line++];
+							Yellow = guitarslines[line++];
+							YellowValue = guitarslines[line++];
+							YellowDefault = guitarslines[line++];
+							Blue = guitarslines[line++];
+							BlueValue = guitarslines[line++];
+							BlueDefault = guitarslines[line++];
+							Orange = guitarslines[line++];
+							OrangeValue = guitarslines[line++];
+							OrangeDefault = guitarslines[line++];
+							StrumDown = guitarslines[line++];
+							StrumDownValue = guitarslines[line++];
+							StrumDownDefault = guitarslines[line++];
+							StrumUp = guitarslines[line++];
+							StrumUpValue = guitarslines[line++];
+							StrumUpDefault = guitarslines[line++];
+							toolStripStatusLabel1.Text = GuitarName;
+							GreenState = GreenDefault;
+							RedState = RedDefault;
+							YellowState = YellowDefault;
+							BlueState = BlueDefault;
+							OrangeState = OrangeDefault;
+							StrumDownState = StrumDownDefault;
+							StrumUpState = StrumUpDefault;
 						}
 					}
 				}
 			}
-		}
-
-		public void ApplyValues()
-		{
-			GreenValue = _GreenValue.Compile<Func<object>>()();
-			RedValue = _RedValue.Compile<Func<object>>()();
-			YellowValue = _YellowValue.Compile<Func<object>>()();
-			BlueValue = _BlueValue.Compile<Func<object>>()();
-			OrangeValue = _OrangeValue.Compile<Func<object>>()();
-
-			StrumDownValue = _StrumDownValue.Compile<Func<object>>()();
-			StrumUpValue = _StrumUpValue.Compile<Func<object>>()();
 		}
 
 		public void ApplyConfig()
@@ -147,11 +158,11 @@ namespace GHCtoMania
 			{
 				if (lines[i].StartsWith("#") == false && done == false)
 				{
-					GreenKey = (VirtualKeyCode)Eval.Compile(lines[i])();
-					RedKey = (VirtualKeyCode)Eval.Compile(lines[i + 1])();
-					YellowKey = (VirtualKeyCode)Eval.Compile(lines[i + 2])();
-					BlueKey = (VirtualKeyCode)Eval.Compile(lines[i + 3])();
-					OrangeKey = (VirtualKeyCode)Eval.Compile(lines[i + 4])();
+					GreenKey = (VirtualKeyCode)Convert.ToInt32(lines[i]);
+					RedKey = (VirtualKeyCode)Convert.ToInt32(lines[i++]);
+					YellowKey = (VirtualKeyCode)Convert.ToInt32(lines[i++]);
+					BlueKey = (VirtualKeyCode)Convert.ToInt32(lines[i++]);
+					OrangeKey = (VirtualKeyCode)Convert.ToInt32(lines[i++]);
 
 					GreenValue_l.Text = GreenKey.ToString();
 					RedValue_l.Text = RedKey.ToString();
@@ -168,255 +179,326 @@ namespace GHCtoMania
 			if (WindowState == FormWindowState.Minimized)
 			{
 				Hide();
+				ShowInTaskbar = false;
 			}
 		}
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
-			FindGuitar();
-			ApplyValues();
-			ApplyConfig();
-
-			Timer timer = new Timer
+			List<string> envvars = new List<string>(Environment.GetCommandLineArgs());
+			if (envvars.Contains("-autohide"))
 			{
-				Interval = 1
-			};
-			timer.Tick += Timer_Tick;
-			timer.Start();
-
-		}
-
-		private void Timer_Tick(object sender, EventArgs e)
-		{
-			JoystickState data;
-			try
-			{
-				Guitar.Poll();
-				data = Guitar.GetCurrentState();
+				WindowState = FormWindowState.Minimized;
 			}
-			catch
+			if (envvars.Contains("-debug"))
 			{
-				return;
-			}
+				Size = new System.Drawing.Size(453, 435);
 
-			var GreenState = Eval.Compile<Func<JoystickState, object>>(Green + ";", "data")(data);
-			var RedState = Eval.Compile<Func<JoystickState, object>>(Red + ";", "data")(data);
-			var YellowState = Eval.Compile<Func<JoystickState, object>>(Yellow + ";", "data")(data);
-			var BlueState = Eval.Compile<Func<JoystickState, object>>(Blue + ";", "data")(data);
-			var OrangeState = Eval.Compile<Func<JoystickState, object>>(Orange + ";", "data")(data);
+				ApplyConfig();
+				foreach (var deviceInstance in directInput.GetDevices(DeviceType.Gamepad, DeviceEnumerationFlags.AllDevices))
+					GuitarGuid = deviceInstance.InstanceGuid;
 
-			var StrumDownState = Eval.Compile<Func<JoystickState, object>>(StrumDown + ";", "data")(data);
-			var StrumUpState = Eval.Compile<Func<JoystickState, object>>(StrumUp + ";", "data")(data);
+				if (GuitarGuid == Guid.Empty)
+					foreach (var deviceInstance in directInput.GetDevices(DeviceType.Joystick, DeviceEnumerationFlags.AllDevices))
+						GuitarGuid = deviceInstance.InstanceGuid;
 
-			//Green
-			if (GreenState.ToString() == GreenValue.ToString())
-			{
-				if (pressing_green == false)
+				// If Joystick not found
+				if (GuitarGuid == Guid.Empty)
 				{
-					InputSimulator.Keyboard.KeyDown(GreenKey);
-					pressing_green = true;
+					Log.Text += "No joystick/Gamepad found.\n";
+					toolStripStatusLabel1.Text = "(DEBUG MODE) No joystick/Gamepad found.";
 				}
 				else
 				{
-					if (StrumDownState.ToString() == StrumDownValue.ToString() || StrumUpState.ToString() == StrumUpValue.ToString())
+					var Guitar = new Joystick(directInput, GuitarGuid);
+					Log.Text += $"Found Joystick/Gamepad with GUID: {GuitarGuid}\n";
+
+					// Query all suported ForceFeedback effects
+					var allEffects = Guitar.GetEffects();
+					foreach (var effectInfo in allEffects)
+						Log.Text += $"Effect available {effectInfo.Name}\n";
+
+					// Set BufferSize in order to use buffered data.
+					Guitar.Properties.BufferSize = 128;
+
+					// Acquire the joystick
+					Guitar.Acquire();
+					toolStripStatusLabel1.Text = "(DEBUG MODE) " + Guitar.Properties.ProductName;
+					// Poll events from joystick
+					Thread t = new Thread((x) =>
 					{
-						if (pressing_strum_green == false)
+						while (true)
 						{
-							InputSimulator.Keyboard.KeyUp(GreenKey);
-							pressing_green = false;
-							pressing_strum_green = true;
+							Guitar.Poll();
+							var datas = Guitar.GetBufferedData();
+							foreach (var state in datas)
+								Log.Text += state + "\n";
 						}
-					}
-					else
-					{
-						pressing_strum_green = false;
-					}
+					});
+					t.SetApartmentState(ApartmentState.MTA);
+					t.Start();
 				}
 			}
 			else
 			{
-				if (pressing_green)
+				FindGuitar();
+				ApplyConfig();
+				if (HID != null)
 				{
-					InputSimulator.Keyboard.KeyUp(GreenKey);
-					pressing_green = false;
-				}
-			}
-
-			//Red
-			if (RedState.ToString() == RedValue.ToString())
-			{
-				if (pressing_red == false)
-				{
-					InputSimulator.Keyboard.KeyDown(RedKey);
-					pressing_red = true;
-				}
-				else
-				{
-					if (StrumDownState.ToString() == StrumDownValue.ToString() || StrumUpState.ToString() == StrumUpValue.ToString())
+					Thread t = new Thread((x) =>
 					{
-						if (pressing_strum_red == false)
+						while (true)
 						{
-							InputSimulator.Keyboard.KeyUp(RedKey);
-							pressing_red = false;
-							pressing_strum_red = true;
+							Guitar.Poll();
+							var datas = Guitar.GetBufferedData();
+							foreach (var state in datas)
+							{
+								Console.WriteLine(state);
+								if (state.Offset.ToString() == Green)
+								{
+									GreenState = state.Value;
+								}
+								if (state.Offset.ToString() == Red)
+								{
+									RedState = state.Value;
+								}
+								if (state.Offset.ToString() == Yellow)
+								{
+									YellowState = state.Value;
+								}
+								if (state.Offset.ToString() == Blue)
+								{
+									BlueState = state.Value;
+								}
+								if (state.Offset.ToString() == Orange)
+								{
+									OrangeState = state.Value;
+								}
+								if (state.Offset.ToString() == StrumDown)
+								{
+									StrumDownState = state.Value;
+								}
+								if (state.Offset.ToString() == StrumUp)
+								{
+									StrumUpState = state.Value;
+								}
+
+								//Green
+								if (GreenState.ToString() == GreenValue.ToString())
+								{
+									if (pressing_green == false)
+									{
+										InputSimulator.Keyboard.KeyDown(GreenKey);
+										pressing_green = true;
+									}
+									else
+									{
+										if (StrumDownState.ToString() == StrumDownValue.ToString() || StrumUpState.ToString() == StrumUpValue.ToString())
+										{
+											if (pressing_strum_green == false)
+											{
+												InputSimulator.Keyboard.KeyUp(GreenKey);
+												Thread.Sleep(1);
+												InputSimulator.Keyboard.KeyDown(GreenKey);
+												pressing_strum_green = true;
+											}
+										}
+										else
+										{
+											pressing_strum_green = false;
+										}
+									}
+								}
+								else
+								{
+									if (pressing_green)
+									{
+										InputSimulator.Keyboard.KeyUp(GreenKey);
+										pressing_green = false;
+										GreenState = GreenDefault;
+									}
+								}
+
+								//Red
+								if (RedState.ToString() == RedValue.ToString())
+								{
+									if (pressing_red == false)
+									{
+										InputSimulator.Keyboard.KeyDown(RedKey);
+										pressing_red = true;
+									}
+									else
+									{
+										if (StrumDownState.ToString() == StrumDownValue.ToString() || StrumUpState.ToString() == StrumUpValue.ToString())
+										{
+											if (pressing_strum_red == false)
+											{
+												InputSimulator.Keyboard.KeyUp(RedKey);
+												Thread.Sleep(1);
+												InputSimulator.Keyboard.KeyDown(RedKey);
+												pressing_strum_red = true;
+											}
+										}
+										else
+										{
+											pressing_strum_red = false;
+										}
+									}
+								}
+								else
+								{
+									if (pressing_red)
+									{
+										InputSimulator.Keyboard.KeyUp(RedKey);
+										pressing_red = false;
+										RedState = RedDefault;
+									}
+								}
+
+								//Yellow
+								if (YellowState.ToString() == YellowValue.ToString())
+								{
+									if (pressing_yellow == false)
+									{
+										InputSimulator.Keyboard.KeyDown(YellowKey);
+										pressing_yellow = true;
+									}
+									else
+									{
+										if (StrumDownState.ToString() == StrumDownValue.ToString() || StrumUpState.ToString() == StrumUpValue.ToString())
+										{
+											if (pressing_strum_yellow == false)
+											{
+												InputSimulator.Keyboard.KeyUp(YellowKey);
+												Thread.Sleep(1);
+												InputSimulator.Keyboard.KeyDown(YellowKey);
+												pressing_strum_yellow = true;
+											}
+										}
+										else
+										{
+											pressing_strum_yellow = false;
+										}
+									}
+								}
+								else
+								{
+									if (pressing_yellow)
+									{
+										InputSimulator.Keyboard.KeyUp(YellowKey);
+										pressing_yellow = false;
+										YellowState = YellowDefault;
+									}
+								}
+
+								//Blue
+								if (BlueState.ToString() == BlueValue.ToString())
+								{
+									if (pressing_blue == false)
+									{
+										InputSimulator.Keyboard.KeyDown(BlueKey);
+										pressing_blue = true;
+									}
+									else
+									{
+										if (StrumDownState.ToString() == StrumDownValue.ToString() || StrumUpState.ToString() == StrumUpValue.ToString())
+										{
+											if (pressing_strum_blue == false)
+											{
+												InputSimulator.Keyboard.KeyUp(BlueKey);
+												Thread.Sleep(1);
+												InputSimulator.Keyboard.KeyDown(BlueKey);
+												pressing_strum_blue = true;
+											}
+										}
+										else
+										{
+											pressing_strum_blue = false;
+										}
+									}
+								}
+								else
+								{
+									if (pressing_blue)
+									{
+										InputSimulator.Keyboard.KeyUp(BlueKey);
+										pressing_blue = false;
+										BlueState = BlueDefault;
+									}
+								}
+
+								//Orange
+								if (OrangeState.ToString() == OrangeValue.ToString())
+								{
+									if (pressing_orange == false)
+									{
+										InputSimulator.Keyboard.KeyDown(OrangeKey);
+										pressing_orange = true;
+									}
+									else
+									{
+										if (StrumDownState.ToString() == StrumDownValue.ToString() || StrumUpState.ToString() == StrumUpValue.ToString())
+										{
+											if (pressing_strum_orange == false)
+											{
+												InputSimulator.Keyboard.KeyUp(OrangeKey);
+												Thread.Sleep(1);
+												InputSimulator.Keyboard.KeyDown(OrangeKey);
+												pressing_strum_orange = true;
+											}
+										}
+										else
+										{
+											pressing_strum_orange = false;
+										}
+									}
+								}
+								else
+								{
+									if (pressing_orange)
+									{
+										InputSimulator.Keyboard.KeyUp(OrangeKey);
+										pressing_orange = false;
+										OrangeState = OrangeDefault;
+									}
+								}
+							}
 						}
-					}
-					else
-					{
-						pressing_strum_red = false;
-					}
+					});
+					t.SetApartmentState(ApartmentState.MTA);
+					t.Start();
 				}
 			}
-			else
-			{
-				if (pressing_red)
-				{
-					InputSimulator.Keyboard.KeyUp(RedKey);
-					pressing_red = false;
-				}
-			}
-
-			//Yellow
-			if (YellowState.ToString() == YellowValue.ToString())
-			{
-				if (pressing_yellow == false)
-				{
-					InputSimulator.Keyboard.KeyDown(YellowKey);
-					pressing_yellow = true;
-				}
-				else
-				{
-					if (StrumDownState.ToString() == StrumDownValue.ToString() || StrumUpState.ToString() == StrumUpValue.ToString())
-					{
-						if (pressing_strum_yellow == false)
-						{
-							InputSimulator.Keyboard.KeyUp(YellowKey);
-							pressing_yellow = false;
-							pressing_strum_yellow = true;
-						}
-					}
-					else
-					{
-						pressing_strum_yellow = false;
-					}
-				}
-			}
-			else
-			{
-				if (pressing_yellow)
-				{
-					InputSimulator.Keyboard.KeyUp(YellowKey);
-					pressing_yellow = false;
-				}
-			}
-
-			//Blue
-			if (BlueState.ToString() == BlueValue.ToString())
-			{
-				if (pressing_blue == false)
-				{
-					InputSimulator.Keyboard.KeyDown(BlueKey);
-					pressing_blue = true;
-				}
-				else
-				{
-					if (StrumDownState.ToString() == StrumDownValue.ToString() || StrumUpState.ToString() == StrumUpValue.ToString())
-					{
-						if (pressing_strum_blue == false)
-						{
-							InputSimulator.Keyboard.KeyUp(BlueKey);
-							pressing_blue = false;
-							pressing_strum_blue = true;
-						}
-					}
-					else
-					{
-						pressing_strum_blue = false;
-					}
-				}
-			}
-			else
-			{
-				if (pressing_blue)
-				{
-					InputSimulator.Keyboard.KeyUp(BlueKey);
-					pressing_blue = false;
-				}
-			}
-
-			//Orange
-			if (OrangeState.ToString() == OrangeValue.ToString())
-			{
-				if (pressing_orange == false)
-				{
-					InputSimulator.Keyboard.KeyDown(OrangeKey);
-					pressing_orange = true;
-				}
-				else
-				{
-					if (StrumDownState.ToString() == StrumDownValue.ToString() || StrumUpState.ToString() == StrumUpValue.ToString())
-					{
-						if (pressing_strum_orange == false)
-						{
-							InputSimulator.Keyboard.KeyUp(OrangeKey);
-							pressing_orange = false;
-							pressing_strum_orange = true;
-						}
-					}
-					else
-					{
-						pressing_strum_orange = false;
-					}
-				}
-			}
-			else
-			{
-				if (pressing_orange)
-				{
-					InputSimulator.Keyboard.KeyUp(OrangeKey);
-					pressing_orange = false;
-				}
-			}
-
+		}
+		private void Restart_b_Click(object sender, EventArgs e)
+		{
+			Log.Clear();
+			Form1_Load(sender, e);
 		}
 
-		private void Find_Guitar_b_Click(object sender, EventArgs e)
+		private void ShowToolStripMenuItem1_Click(object sender, EventArgs e)
 		{
-			FindGuitar();
-			ApplyValues();
-			ApplyConfig();
-		}
-
-		private void ReloadConfig_b_Click(object sender, EventArgs e)
-		{
-			ApplyConfig();
-		}
-
-		private void FindGuitarToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			FindGuitar();
-		}
-
-		private void reloadConfigToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			ApplyConfig();
-		}
-
-		private void showToolStripMenuItem1_Click(object sender, EventArgs e)
-		{
+			ShowInTaskbar = true;
 			Show();
 			WindowState = FormWindowState.Normal;
 		}
 
-		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+		private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			Application.Exit();
 		}
 
-		private void notifyIcon_Click(object sender, EventArgs e)
+		private void NotifyIcon_MouseClick(object sender, MouseEventArgs e)
 		{
-			Show();
-			WindowState = FormWindowState.Normal;
+			if (e.Button == MouseButtons.Left)
+			{
+				Show();
+				WindowState = FormWindowState.Normal;
+			}
+			else if (e.Button == MouseButtons.Right)
+			{
+				contextMenuStrip1.Show();
+			}
 		}
 	}
 }
