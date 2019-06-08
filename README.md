@@ -1,5 +1,5 @@
 # GHCtoMania
-# [Download](https://github.com/EXtremeExploit/GHCtoMania/releases/download/1.0/GHCtoMania.zip)
+# [Download](https://github.com/EXtremeExploit/GHCtoMania/releases/download/1.1/GHCtoMania.zip)
 ## About
 This is a simple input converter for Guitars from the game Guitar Hero meant to be used with [osu!](https://osu.ppy.sh) in the mania gamemode.
 
@@ -18,11 +18,18 @@ This is a simple input converter for Guitars from the game Guitar Hero meant to 
 
 
 ## Configuration
-The configuration file is located at the Data folder, it's name is config.cfg, there you will be able to edit wich keys presses any 
+* The configuration file is located at the Data folder, it's name is config.cfg, there you will be able to edit wich keys presses any button, the Keys.txt file shows you each number that each key has. For more information check the [wiki](https://github.com/EXtremeExploit/GHCtoMania/wiki/Config_File).
 
 ## Contributing
-The file where guitars information is stored is in ./Data/guitars.cfg. There you will find an explanation on how that file works and how to add a guitar if is unsupported.
+- Check the [wiki](https://github.com/EXtremeExploit/GHCtoMania/wiki/Adding_guitar) on how a guitar is added, also pull requests are welcome
 
 # Changelog
+> **v1.1.0**
+> * Now the program does not use Z-Eval-Expression.NET (Doesn't require a license each month). By making this now you are able to use this at any time without any conflicts, also makes a huge optimization.
+> * Deleted "Reload config" button, it was doing the same as Find Guitar.
+> * Added a Debug-Mode, this allows you to see exactly what is the guitar sending to the program and with this you can add your own guitar. This is enabled adding -debug at the end of the program shortcut.
+> * Added Auto-Hide, the programs starts minimized, usefull if you run the application when windows starts.
+> * Optimizations on how the guitar state is recieved, instead of polling the guitar at 1000Hz, now works like a PS/2 port. *Less CPU work, less latency*.
+
 > **v1.0.0**
 > * Initial release with the executable file and its cfg files.
