@@ -1,5 +1,5 @@
 # GHCtoMania
-# [Download](https://github.com/EXtremeExploit/GHCtoMania/releases/download/1.1/GHCtoMania.zip)
+# [Download](https://github.com/EXtremeExploit/GHCtoMania/releases/download/1.1.1/GHCtoMania.zip)
 ## About
 This is a simple input converter for Guitars from the game Guitar Hero meant to be used with [osu!](https://osu.ppy.sh) in the mania gamemode.
 
@@ -24,6 +24,13 @@ This is a simple input converter for Guitars from the game Guitar Hero meant to 
 - Check the [wiki](https://github.com/EXtremeExploit/GHCtoMania/wiki/Adding_guitar) on how a guitar is added, also pull requests are welcome
 
 # Changelog
+> **v1.1.1**
+> * [[6e2ce16](https://github.com/EXtremeExploit/GHCtoMania/commit/6e2ce169f65733b0728f7afaa0bdd3042f8dec4a)]  **FIXED** Line breaks
+> * [[6e2ce16](https://github.com/EXtremeExploit/GHCtoMania/commit/6e2ce169f65733b0728f7afaa0bdd3042f8dec4a)]   **ADDED** Guitar name, VID and PID,
+> * [[6e2ce16](https://github.com/EXtremeExploit/GHCtoMania/commit/6e2ce169f65733b0728f7afaa0bdd3042f8dec4a)]   **IMPROVMENTS** Now the console in debug-mode is bigger with black background and white font
+> * [[017beb6](https://github.com/EXtremeExploit/GHCtoMania/commit/017beb6089565eebcc1a629aa638fb4b9c910aea)] **FIXED** Lines not selecting correctly
+
+
 > **v1.1.0**
 > * Now the program does not use Z-Eval-Expression.NET (Doesn't require a license each month). By making this now you are able to use this at any time without any conflicts, also makes a huge optimization.
 > * Deleted "Reload config" button, it was doing the same as Find Guitar.
