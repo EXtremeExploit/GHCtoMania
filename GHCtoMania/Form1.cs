@@ -98,7 +98,7 @@ namespace GHCtoMania
 				GuitarGuid = Guid.Empty;
 				Guitar.Properties.BufferSize = 128;
 				Guitar.Acquire();
-				for (var line = 0; line < guitarslines.Length; line++)
+				for (var line = 0; line < guitarslines.Length; ++line)
 				{
 					if (guitarslines[line].StartsWith("HID"))
 					{
@@ -114,28 +114,28 @@ namespace GHCtoMania
 						if (guitarVID == vid && guitarPID == pid)
 						{
 							HID = guitarslines[line].Replace("HID ", "");
-							GuitarName = guitarslines[line++];
-							Green = guitarslines[line++];
-							GreenValue = guitarslines[line++];
-							GreenDefault = guitarslines[line++];
-							Red = guitarslines[line++];
-							RedValue = guitarslines[line++];
-							RedDefault = guitarslines[line++];
-							Yellow = guitarslines[line++];
-							YellowValue = guitarslines[line++];
-							YellowDefault = guitarslines[line++];
-							Blue = guitarslines[line++];
-							BlueValue = guitarslines[line++];
-							BlueDefault = guitarslines[line++];
-							Orange = guitarslines[line++];
-							OrangeValue = guitarslines[line++];
-							OrangeDefault = guitarslines[line++];
-							StrumDown = guitarslines[line++];
-							StrumDownValue = guitarslines[line++];
-							StrumDownDefault = guitarslines[line++];
-							StrumUp = guitarslines[line++];
-							StrumUpValue = guitarslines[line++];
-							StrumUpDefault = guitarslines[line++];
+							GuitarName = guitarslines[++line];
+							Green = guitarslines[++line];
+							GreenValue = guitarslines[++line];
+							GreenDefault = guitarslines[++line];
+							Red = guitarslines[++line];
+							RedValue = guitarslines[++line];
+							RedDefault = guitarslines[++line];
+							Yellow = guitarslines[++line];
+							YellowValue = guitarslines[++line];
+							YellowDefault = guitarslines[++line];
+							Blue = guitarslines[++line];
+							BlueValue = guitarslines[++line];
+							BlueDefault = guitarslines[++line];
+							Orange = guitarslines[++line];
+							OrangeValue = guitarslines[++line];
+							OrangeDefault = guitarslines[++line];
+							StrumDown = guitarslines[++line];
+							StrumDownValue = guitarslines[++line];
+							StrumDownDefault = guitarslines[++line];
+							StrumUp = guitarslines[++line];
+							StrumUpValue = guitarslines[++line];
+							StrumUpDefault = guitarslines[++line];
 							toolStripStatusLabel1.Text = GuitarName;
 							GreenState = GreenDefault;
 							RedState = RedDefault;
@@ -160,10 +160,10 @@ namespace GHCtoMania
 				if (lines[i].StartsWith("#") == false && done == false)
 				{
 					GreenKey = (VirtualKeyCode)Convert.ToInt32(lines[i]);
-					RedKey = (VirtualKeyCode)Convert.ToInt32(lines[i++]);
-					YellowKey = (VirtualKeyCode)Convert.ToInt32(lines[i++]);
-					BlueKey = (VirtualKeyCode)Convert.ToInt32(lines[i++]);
-					OrangeKey = (VirtualKeyCode)Convert.ToInt32(lines[i++]);
+					RedKey = (VirtualKeyCode)Convert.ToInt32(lines[++i]);
+					YellowKey = (VirtualKeyCode)Convert.ToInt32(lines[++i]);
+					BlueKey = (VirtualKeyCode)Convert.ToInt32(lines[++i]);
+					OrangeKey = (VirtualKeyCode)Convert.ToInt32(lines[++i]);
 
 					GreenValue_l.Text = GreenKey.ToString();
 					RedValue_l.Text = RedKey.ToString();
