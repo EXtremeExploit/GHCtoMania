@@ -234,8 +234,11 @@
 			this.Log.Multiline = true;
 			this.Log.Name = "Log";
 			this.Log.ReadOnly = true;
-			this.Log.Size = new System.Drawing.Size(417, 210);
+			this.Log.BackColor = System.Drawing.Color.Black;
+			this.Log.ForeColor = System.Drawing.Color.White;
+			this.Log.Size = new System.Drawing.Size(455, 270);
 			this.Log.TabIndex = 13;
+			this.Log.TextChanged += new System.EventHandler(this.Log_TextChanged);
 			// 
 			// Form1
 			// 

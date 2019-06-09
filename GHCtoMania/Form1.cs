@@ -76,6 +76,7 @@ namespace GHCtoMania
 		public Form1()
 		{
 			InitializeComponent();
+			CheckForIllegalCrossThreadCalls = false;
 		}
 
 
@@ -192,7 +193,7 @@ namespace GHCtoMania
 			}
 			if (envvars.Contains("-debug"))
 			{
-				Size = new System.Drawing.Size(453, 435);
+				Size = new System.Drawing.Size(480, 480);
 
 				ApplyConfig();
 				foreach (var deviceInstance in directInput.GetDevices(DeviceType.Gamepad, DeviceEnumerationFlags.AllDevices))
@@ -211,12 +212,19 @@ namespace GHCtoMania
 				else
 				{
 					var Guitar = new Joystick(directInput, GuitarGuid);
-					Log.Text += $"Found Joystick/Gamepad with GUID: {GuitarGuid}\n";
+					Log.ScrollBars = ScrollBars.Vertical;
+					Log.Text += $"Found Joystick/Gamepad with GUID: {GuitarGuid}{Environment.NewLine}";
+					Log.Text += $"Name: {Guitar.Properties.ProductName}{Environment.NewLine}";
+					string guitarIntP = Guitar.Properties.InterfacePath;
+					string guitarHID = guitarIntP.Split('#')[1];
+					string guitarVID = guitarHID.Split('&')[0].Replace("vid_", "");
+					string guitarPID = guitarHID.Split('&')[1].Replace("pid_", "");
+					Log.Text += $"VID / PID: {guitarVID} / {guitarPID}{Environment.NewLine}";
 
 					// Query all suported ForceFeedback effects
 					var allEffects = Guitar.GetEffects();
 					foreach (var effectInfo in allEffects)
-						Log.Text += $"Effect available {effectInfo.Name}\n";
+						Log.Text += $"Effect available {effectInfo.Name}{Environment.NewLine}";
 
 					// Set BufferSize in order to use buffered data.
 					Guitar.Properties.BufferSize = 128;
@@ -232,7 +240,7 @@ namespace GHCtoMania
 							Guitar.Poll();
 							var datas = Guitar.GetBufferedData();
 							foreach (var state in datas)
-								Log.Text += state + "\n";
+								Log.Text += state + Environment.NewLine;
 						}
 					});
 					t.SetApartmentState(ApartmentState.MTA);
@@ -499,6 +507,12 @@ namespace GHCtoMania
 			{
 				contextMenuStrip1.Show();
 			}
+		}
+
+		private void Log_TextChanged(object sender, EventArgs e)
+		{
+			Log.SelectionStart = Log.Text.Length;
+			Log.ScrollToCaret();
 		}
 	}
 }
