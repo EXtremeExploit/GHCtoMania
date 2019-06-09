@@ -258,10 +258,9 @@ namespace GHCtoMania
 						while (true)
 						{
 							Guitar.Poll();
-							var datas = Guitar.GetBufferedData();
-							foreach (var state in datas)
+							var states = Guitar.GetBufferedData();
+							foreach (var state in states)
 							{
-								Console.WriteLine(state);
 								if (state.Offset.ToString() == Green)
 								{
 									GreenState = state.Value;
