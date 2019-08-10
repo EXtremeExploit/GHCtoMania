@@ -1,5 +1,5 @@
 # GHCtoMania
-# [Download](https://github.com/EXtremeExploit/GHCtoMania/releases/download/1.1.1/GHCtoMania.zip)
+# [Download](https://github.com/EXtremeExploit/GHCtoMania/releases/download/1.1.2/GHCtoMania.zip)
 ## About
 This is a simple input converter for Guitars from the game Guitar Hero meant to be used with [osu!](https://osu.ppy.sh) in the mania gamemode.
 
@@ -24,6 +24,9 @@ This is a simple input converter for Guitars from the game Guitar Hero meant to 
 - Check the [wiki](https://github.com/EXtremeExploit/GHCtoMania/wiki/Adding_guitar) on how a guitar is added, also pull requests are welcome
 
 # Changelog
+> **v1.1.2**
+> * [[843fcea](https://github.com/EXtremeExploit/GHCtoMania/commit/843fcea026df728a5e27a9b05c0b2f06d873c2e6)] Now whenever there is an error it will log it to the console 
+
 > **v1.1.1**
 > * [[6e2ce16](https://github.com/EXtremeExploit/GHCtoMania/commit/6e2ce169f65733b0728f7afaa0bdd3042f8dec4a)]  **FIXED** Line breaks
 > * [[6e2ce16](https://github.com/EXtremeExploit/GHCtoMania/commit/6e2ce169f65733b0728f7afaa0bdd3042f8dec4a)]   **ADDED** Guitar name, VID and PID,
