@@ -31,7 +31,7 @@
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-			this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+			this.status = new System.Windows.Forms.ToolStripStatusLabel();
 			this.Green_l = new System.Windows.Forms.Label();
 			this.Restart_b = new System.Windows.Forms.Button();
 			this.GreenValue_l = new System.Windows.Forms.Label();
@@ -58,18 +58,18 @@
 			// statusStrip1
 			// 
 			this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel1});
+            this.status});
 			this.statusStrip1.Location = new System.Drawing.Point(0, 122);
 			this.statusStrip1.Name = "statusStrip1";
 			this.statusStrip1.Size = new System.Drawing.Size(264, 22);
 			this.statusStrip1.TabIndex = 0;
 			this.statusStrip1.Text = "statusStrip1";
 			// 
-			// toolStripStatusLabel1
+			// status
 			// 
-			this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-			this.toolStripStatusLabel1.Size = new System.Drawing.Size(118, 17);
-			this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
+			this.status.Name = "status";
+			this.status.Size = new System.Drawing.Size(118, 17);
+			this.status.Text = "toolStripStatusLabel1";
 			// 
 			// Green_l
 			// 
@@ -197,45 +197,46 @@
             this.showToolStripMenuItem1,
             this.exitToolStripMenuItem});
 			this.contextMenuStrip1.Name = "contextMenuStrip1";
-			this.contextMenuStrip1.Size = new System.Drawing.Size(181, 114);
+			this.contextMenuStrip1.Size = new System.Drawing.Size(167, 92);
 			// 
 			// gHCToManiaV10ToolStripMenuItem
 			// 
 			this.gHCToManiaV10ToolStripMenuItem.Enabled = false;
 			this.gHCToManiaV10ToolStripMenuItem.Name = "gHCToManiaV10ToolStripMenuItem";
 			this.gHCToManiaV10ToolStripMenuItem.ShowShortcutKeys = false;
-			this.gHCToManiaV10ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.gHCToManiaV10ToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
 			this.gHCToManiaV10ToolStripMenuItem.Text = "GHC to Mania v1.1";
 			// 
 			// restartToolStripMenuItem
 			// 
 			this.restartToolStripMenuItem.Name = "restartToolStripMenuItem";
-			this.restartToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.restartToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
 			this.restartToolStripMenuItem.Text = "Restart";
 			this.restartToolStripMenuItem.Click += new System.EventHandler(this.Restart_b_Click);
 			// 
 			// showToolStripMenuItem1
 			// 
 			this.showToolStripMenuItem1.Name = "showToolStripMenuItem1";
-			this.showToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+			this.showToolStripMenuItem1.Size = new System.Drawing.Size(166, 22);
 			this.showToolStripMenuItem1.Text = "Show";
 			this.showToolStripMenuItem1.Click += new System.EventHandler(this.ShowToolStripMenuItem1_Click);
 			// 
 			// exitToolStripMenuItem
 			// 
 			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-			this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
 			this.exitToolStripMenuItem.Text = "Exit";
 			this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
 			// 
 			// Log
 			// 
+			this.Log.BackColor = System.Drawing.Color.Black;
+			this.Log.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.Log.ForeColor = System.Drawing.Color.White;
 			this.Log.Location = new System.Drawing.Point(8, 152);
 			this.Log.Multiline = true;
 			this.Log.Name = "Log";
 			this.Log.ReadOnly = true;
-			this.Log.BackColor = System.Drawing.Color.Black;
-			this.Log.ForeColor = System.Drawing.Color.White;
 			this.Log.Size = new System.Drawing.Size(455, 270);
 			this.Log.TabIndex = 13;
 			this.Log.TextChanged += new System.EventHandler(this.Log_TextChanged);
@@ -277,7 +278,7 @@
 		#endregion
 
 		private System.Windows.Forms.StatusStrip statusStrip1;
-		private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+		private System.Windows.Forms.ToolStripStatusLabel status;
 		private System.Windows.Forms.Label Green_l;
 		private System.Windows.Forms.Button Restart_b;
 		private System.Windows.Forms.Label GreenValue_l;

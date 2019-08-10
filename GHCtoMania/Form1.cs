@@ -15,6 +15,7 @@ namespace GHCtoMania
 		Guid GuitarGuid = Guid.Empty;
 		Joystick Guitar;
 		readonly InputSimulator InputSimulator = new InputSimulator();
+		bool everythingIsOk = true;
 
 		#region Guitar Status
 		bool pressing_green = false;
@@ -71,6 +72,7 @@ namespace GHCtoMania
 		VirtualKeyCode YellowKey;
 		VirtualKeyCode BlueKey;
 		VirtualKeyCode OrangeKey;
+
 		#endregion
 
 		public Form1()
@@ -90,7 +92,7 @@ namespace GHCtoMania
 			}
 			if (GuitarGuid == Guid.Empty)
 			{
-				toolStripStatusLabel1.Text = "No Guitar Found.";
+				status.Text = "No Guitar Found.";
 			}
 			else
 			{
@@ -136,7 +138,7 @@ namespace GHCtoMania
 							StrumUp = guitarslines[++line];
 							StrumUpValue = guitarslines[++line];
 							StrumUpDefault = guitarslines[++line];
-							toolStripStatusLabel1.Text = GuitarName;
+							status.Text = GuitarName;
 							GreenState = GreenDefault;
 							RedState = RedDefault;
 							YellowState = YellowDefault;
@@ -193,6 +195,7 @@ namespace GHCtoMania
 			}
 			if (envvars.Contains("-debug"))
 			{
+				#region Debug Mode
 				Size = new System.Drawing.Size(480, 480);
 
 				ApplyConfig();
@@ -207,7 +210,7 @@ namespace GHCtoMania
 				if (GuitarGuid == Guid.Empty)
 				{
 					Log.Text += "No joystick/Gamepad found.\n";
-					toolStripStatusLabel1.Text = "(DEBUG MODE) No joystick/Gamepad found.";
+					status.Text = "(DEBUG MODE) No joystick/Gamepad found.";
 				}
 				else
 				{
@@ -231,21 +234,33 @@ namespace GHCtoMania
 
 					// Acquire the joystick
 					Guitar.Acquire();
-					toolStripStatusLabel1.Text = "(DEBUG MODE) " + Guitar.Properties.ProductName;
+					status.Text = "(DEBUG MODE) " + Guitar.Properties.ProductName;
 					// Poll events from joystick
 					Thread t = new Thread((x) =>
 					{
-						while (true)
+						JoystickUpdate[] states = null;
+						while (everythingIsOk)
 						{
-							Guitar.Poll();
-							var datas = Guitar.GetBufferedData();
-							foreach (var state in datas)
+							try
+							{
+								Guitar.Poll();
+								states = Guitar.GetBufferedData();
+							}
+							catch (Exception ex)
+							{
+								everythingIsOk = false;
+								//Input Lost
+								if (ex.HResult == -2147024866)
+									Log.Text += "[ERROR] Input Lost. Please restart.";
+							}
+							foreach (var state in states)
 								Log.Text += state + Environment.NewLine;
 						}
 					});
 					t.SetApartmentState(ApartmentState.MTA);
 					t.Start();
 				}
+				#endregion
 			}
 			else
 			{
@@ -255,10 +270,28 @@ namespace GHCtoMania
 				{
 					Thread t = new Thread((x) =>
 					{
-						while (true)
+						JoystickUpdate[] states = null;
+						while (everythingIsOk)
 						{
-							Guitar.Poll();
-							var states = Guitar.GetBufferedData();
+							try
+							{
+								Guitar.Poll();
+								states = Guitar.GetBufferedData();
+							}
+							catch (Exception ex)
+							{
+								everythingIsOk = false;
+
+								//Input Lost
+								switch (ex.HResult)
+								{
+									//Input lost
+									case -2147024866: status.Text = "[ERROR] Input Lost. Please restart."; break;
+									// Unknown error
+									default: status.Text = "An unknown error ocurred. check errors.txt."; break;
+								}
+							}
+							if (states == null) return;
 							foreach (var state in states)
 							{
 								if (state.Offset.ToString() == Green)
@@ -480,6 +513,8 @@ namespace GHCtoMania
 		private void Restart_b_Click(object sender, EventArgs e)
 		{
 			Log.Clear();
+			everythingIsOk = true;
+			GuitarGuid = Guid.Empty;
 			Form1_Load(sender, e);
 		}
 
